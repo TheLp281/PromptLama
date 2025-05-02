@@ -73,6 +73,16 @@ jobs:
           fi
         shell: bash
 
+      - name: Copy static assets
+        run: |
+          cp -r static output/
+        if: runner.os != 'Windows'
+
+      - name: Copy static assets (Windows)
+        run: |
+          xcopy static output\static /E /I
+        if: runner.os == 'Windows'
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
