@@ -1,15 +1,18 @@
-name: Build Python Binary
+name: Build and Release Python Binary
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout repository
@@ -23,18 +26,44 @@ jobs:
       - name: Install dependencies
         run: |
           python -m venv venv
-          source venv/bin/activate
+          . venv/bin/activate || .\venv\Scripts\activate
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
 
       - name: Build executable
         run: |
-          source venv/bin/activate
+          . venv/bin/activate || .\venv\Scripts\activate
           pyinstaller --onefile main.py
 
-      - name: Upload binary
+      - name: Rename binary for OS
+        run: |
+          mkdir output
+          if [ "$RUNNER_OS" == "Windows" ]; then mv dist/main.exe output/main-windows.exe
+          elif [ "$RUNNER_OS" == "macOS" ]; then mv dist/main output/main-macos
+          else mv dist/main output/main-linux
+        shell: bash
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: python-binary
-          path: dist/main
+          name: binary-${{ runner.os }}
+          path: output/*
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
