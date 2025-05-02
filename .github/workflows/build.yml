@@ -26,14 +26,24 @@ jobs:
       - name: Install dependencies
         run: |
           python -m venv venv
-          . venv/bin/activate || .\venv\Scripts\activate
+          # Activate the virtual environment based on the OS
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            .\venv\Scripts\activate
+          else
+            source venv/bin/activate
+          fi
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
 
       - name: Build executable
         run: |
-          . venv/bin/activate || .\venv\Scripts\activate
+          # Activate the virtual environment based on the OS
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            .\venv\Scripts\activate
+          else
+            source venv/bin/activate
+          fi
           pyinstaller --onefile main.py
 
       - name: Rename binary for OS
