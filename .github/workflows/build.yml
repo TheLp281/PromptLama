@@ -23,35 +23,46 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install dependencies (Unix)
+        if: runner.os != 'Windows'
         run: |
           python -m venv venv
-          # Activate the virtual environment based on the OS
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            .\venv\Scripts\activate
-          else
-            source venv/bin/activate
-          fi
+          source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Build executable
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
         run: |
-          # Activate the virtual environment based on the OS
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            .\venv\Scripts\activate
-          else
-            source venv/bin/activate
-          fi
+          python -m venv venv
+          .\venv\Scripts\activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build executable (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          source venv/bin/activate
+          pyinstaller --onefile main.py
+
+      - name: Build executable (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          .\venv\Scripts\activate
           pyinstaller --onefile main.py
 
       - name: Rename binary for OS
         run: |
           mkdir output
-          if [ "${{ runner.os }}" == "Windows" ]; then mv dist/main.exe output/main-windows.exe
-          elif [ "${{ runner.os }}" == "macOS" ]; then mv dist/main output/main-macos
-          else mv dist/main output/main-linux
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            mv dist/main.exe output/main-windows.exe
+          elif [ "${{ runner.os }}" = "macOS" ]; then
+            mv dist/main output/main-macos
+          else
+            mv dist/main output/main-linux
+          fi
         shell: bash
 
       - name: Upload artifact
