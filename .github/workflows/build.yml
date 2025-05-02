@@ -74,18 +74,24 @@ jobs:
         shell: bash
 
       - name: Copy static assets
-        run: cp -r static output/
         if: runner.os != 'Windows'
+        run: cp -r static output/
 
       - name: Copy static assets (Windows)
-        run: xcopy static output\static /E /I
         if: runner.os == 'Windows'
+        run: xcopy static output\static /E /I
 
-      - name: Package artifacts
+      - name: Package artifacts (Unix)
+        if: runner.os != 'Windows'
         run: |
           cd output
           zip -r ../release-${{ runner.os }}.zip .
         shell: bash
+
+      - name: Package artifacts (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path output\* -DestinationPath release-Windows.zip
+        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
