@@ -9,8 +9,8 @@
 ### AI voice generation via EdgeTTS
 
 ## Requirements:
-Ollama server running in your system
-FFmpeg installed in your system (for speech recognition)
+### **Ollama server running in your system**
+### **FFmpeg installed in your system (for speech recognition)**
 
 <table align="center">
   <tr>
@@ -61,10 +61,10 @@ URL of ollama api. Defaults to http://127.0.0.1:11434
 
 ## Todo:
 
-Language dropdown to override recognized language
-Set temperature of model
-Implement model management ui
-Export chat history button
-Switch to vite/npm
-Configure eslint/typescript
-Get rid of ffmpeg dependency
+•**Language dropdown to override recognized language**
+•**Set temperature of model**
+•**Implement model management ui**
+•**Export chat history button**
+•**Switch to vite/npm**
+•**Configure eslint/typescript**
+•**Get rid of ffmpeg dependency**
