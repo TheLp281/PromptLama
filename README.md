@@ -12,18 +12,19 @@
 Ollama server running in your system
 FFmpeg installed in your system (for speech recognition)
 
-## Tech stack:
+<table align="center">
+  <tr>
+    <td align="center" width="96">
+      <img src="https://techstack-generator.vercel.app/python-icon.svg" width="48" height="48" alt="Python" />
+      <br>Python FastAPI
+    </td>
+    <td align="center" width="96">
+      <img src="https://ollama.com/public/ollama.png" width="48" height="48" alt="Ollama" />
+      <br>Ollama
+    </td>
+  </tr>
+</table>
 
-<td align="center" width="96">
-  <img src="https://techstack-generator.vercel.app/python-icon.svg" width="48" height="48" alt="Python" />
-  <br>Python FastApi
-</td>
-
-
-<td align="center" width="96">
-  <img src="https://ollama.com/public/ollama.png" width="48" height="48" alt="Ollama" />
-  <br>Ollama
-</td>
 
 
 
