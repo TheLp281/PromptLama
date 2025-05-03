@@ -1,12 +1,31 @@
-Ollama AI Chat/Voice Frontend
+# Ollama AI Chat/Voice Frontend
 
 
 # Features
 
-Connect to a ollama server and send messages to open source LLMs
-Store message history
-Speech recognition from microphone
-AI voice via EdgeTTS
+### Connect to a ollama server and send messages to open source LLMs
+### Store message history
+### Speech recognition from microphone input
+### AI voice generation via EdgeTTS
+
+## Requirements:
+Ollama server running in your system
+FFmpeg installed in your system (for speech recognition)
+
+## Tech stack:
+
+<td align="center" width="96">
+  <img src="https://techstack-generator.vercel.app/python-icon.svg" width="48" height="48" alt="Python" />
+  <br>Python FastApi
+</td>
+
+
+<td align="center" width="96">
+  <img src="https://ollama.com/public/ollama.png" width="48" height="48" alt="Ollama" />
+  <br>Ollama
+</td>
+
+
 
 # Quickstart
 
@@ -14,10 +33,6 @@ AI voice via EdgeTTS
 Install binary from https://github.com/TheLp281/PromptLama/releases
 
 ### For Developers
-
-## Requirements:
-Ollama server running in your system
-FFmpeg installed in your system (for speech recognition)
 
 ## To setup virtual env and install:
 ``` bash
@@ -29,7 +44,7 @@ make install
 make run
 ```
 
-## Configure:
+## Configuration options:
 Available options for .env:
 
 ## HOST
@@ -49,4 +64,6 @@ Language dropdown to override recognized language
 Set temperature of model
 Implement model management ui
 Export chat history button
-
+Switch to vite/npm
+Configure eslint/typescript
+Get rid of ffmpeg dependency
