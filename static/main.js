@@ -712,8 +712,10 @@ function appendMessage(
 		}
 
 		streamingText += text;
-		const codeEl = streamingBubble.querySelector('code');
-		codeEl.textContent = streamingText;
+		const codeEl = streamingBubble
+			.querySelector('pre')
+			.querySelector('code');
+		if (codeEl) codeEl.textContent = streamingText;
 
 		chatContainer.scrollTop = chatContainer.scrollHeight;
 		return;

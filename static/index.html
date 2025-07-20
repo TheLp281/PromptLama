@@ -1,421 +1,499 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Efe GPT</title>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class'
-    }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-</head>
-<style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    font-family: sans-serif;
-    background-color: #212121;
-    overflow: hidden;
-    touch-action: none;
-  }
-  body {
-    width: 100vw;
-    min-height: 100vh;
-    max-height: 100vh;
-    box-sizing: border-box;
-    overscroll-behavior: contain;
-  }
-  #__main-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    max-height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-  }
-  .selected-channel {
-    background-color: #2F2F2F !important;
-  }
-  #searchInputContainer {
-    position: relative;
-    width: 100%;
-    margin-bottom: 1rem;
-    margin-left: 20px;
-  }
-  #noHistoryButton {
-    margin-left: 5em;
-  }
-  #searchInputContainer input {
-    width: calc(100% - 2.5rem);
-    padding: 0.75rem;
-    padding-left: 2.5rem;
-    background-color: #333;
-    border-radius: 0.375rem;
-    border: 1px solid #555;
-    color: white;
-  }
-  #searchInputContainer i {
-    position: absolute;
-    left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #aaa;
-  }
-  .channel-container {
-    display: flex;
-    cursor: pointer;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px; 
-    border-radius: 50px;
-  }
-  .channel-dropdown-button {
-    background: transparent;
-    border: none;
-    color: white; 
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  .channel-dropdown-menu {
-    position: absolute;
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-  }
-  .channel-container:hover  {
-    background-color: #2F2F2F;
-  }
-  .channel-button.selected-channel {
-    background-color: #2F2F2F !important;
-  }
-  @keyframes fadeIn {
-  from { opacity: 0 }
-  to { opacity: 1 }
-}
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>Efe GPT</title>
 
-  .message-animate {
-    animation: fadeIn 0.3s ease-in;
-  }
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+				darkMode: 'class',
+			};
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+	</head>
+	<style>
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			font-family: sans-serif;
+			background-color: #212121;
+			overflow: hidden;
+			touch-action: none;
+		}
+		body {
+			width: 100vw;
+			min-height: 100vh;
+			max-height: 100vh;
+			box-sizing: border-box;
+			overscroll-behavior: contain;
+		}
+		#__main-wrap {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			height: 100vh;
+			max-height: 100vh;
+			width: 100vw;
+			overflow: hidden;
+		}
+		.selected-channel {
+			background-color: #2f2f2f !important;
+		}
+		#searchInputContainer {
+			position: relative;
+			width: 100%;
+			margin-bottom: 1rem;
+			margin-left: 20px;
+		}
+		#noHistoryButton {
+			margin-left: 5em;
+		}
+		#searchInputContainer input {
+			width: calc(100% - 2.5rem);
+			padding: 0.75rem;
+			padding-left: 2.5rem;
+			background-color: #333;
+			border-radius: 0.375rem;
+			border: 1px solid #555;
+			color: white;
+		}
+		#searchInputContainer i {
+			position: absolute;
+			left: 0.75rem;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #aaa;
+		}
+		.channel-container {
+			display: flex;
+			cursor: pointer;
+			align-items: center;
+			justify-content: space-between;
+			padding: 10px;
+			border-radius: 50px;
+		}
+		.channel-dropdown-button {
+			background: transparent;
+			border: none;
+			color: white;
+			font-size: 1.5rem;
+			cursor: pointer;
+		}
+		.channel-dropdown-menu {
+			position: absolute;
+			background-color: #333;
+			color: white;
+			padding: 10px;
+			border-radius: 5px;
+			box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+			z-index: 10;
+		}
+		.channel-container:hover {
+			background-color: #2f2f2f;
+		}
+		.channel-button.selected-channel {
+			background-color: #2f2f2f !important;
+		}
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
 
-  .ai-streaming {
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+		.message-animate {
+			animation: fadeIn 0.3s ease-in;
+		}
 
-  #sidebar {
-    height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 20rem;
-    background-color: #121212;
-    z-index: 3;
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-    display: flex;
-    flex-direction: column;
-  }
-  #sidebar.open {
-    transform: translateX(0);
-  }
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 2rem;
-    flex-grow: 1;
-    width: 100%;
-    max-width: 100vw;
-    overflow: hidden;
-  }
-  .chat-container {
-    flex-grow: 1;
-    overflow-y: auto;
-    min-height: 0;
-  }
-  .chat-container.empty {
-    flex-grow: 0;
-    min-height: 0;
-    height: 0;
-    overflow: hidden;
-  }
+		.ai-streaming {
+			white-space: pre-wrap;
+			word-break: break-word;
+		}
 
-  #empty-chat-text {
-    margin-bottom: 16rem;
-  }
-  #textInput .chat-container-empty  {
-    background-color: aqua;
-  }
+		#sidebar {
+			height: 100vh;
+			max-height: 100vh;
+			overflow: hidden;
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 20rem;
+			background-color: #121212;
+			z-index: 3;
+			transform: translateX(-100%);
+			transition: transform 0.3s;
+			display: flex;
+			flex-direction: column;
+		}
+		#sidebar.open {
+			transform: translateX(0);
+		}
+		.main-content {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			gap: 2rem;
+			flex-grow: 1;
+			width: 100%;
+			max-width: 100vw;
+			overflow: hidden;
+		}
+		.chat-container {
+			flex-grow: 1;
+			overflow-y: auto;
+			min-height: 0;
+			overflow-x: hidden;
+		}
+		.chat-container.empty {
+			flex-grow: 0;
+			min-height: 0;
+			height: 0;
+			overflow: hidden;
+		}
+		.modelsButton {
+			white-space: nowrap;
+		}
 
-  input::placeholder {
-    color: #aaa;
-  }
+		#empty-chat-text {
+			margin-bottom: 16rem;
+		}
+		#textInput .chat-container-empty {
+			background-color: aqua;
+		}
 
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; 
-    flex-grow: 1;
-    height: 100%;
-  }
-  .chat-container:not(:empty) + .flex.gap-2.items-center {
-    justify-content: flex-start; 
-    margin-top: auto;
-  }
-  .chat-container:empty ~ #status {
-    display: none !important;
-  }
-  .center-vertical {
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-  #textInput {
-    width: 20vw;
-    max-width: 30vw;
-    background-color: #303030;
-    color: white;
-    padding: 20px;
-    border: 1px solid #424242;
-    border-radius: 50px;
-    box-sizing: border-box;
-    outline: none;
-    white-space: pre-wrap;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    display: block;
-    min-height: 2.5rem;
-    max-height: 40vh;
-    overflow-y: auto;
-  }
+		input::placeholder {
+			color: #aaa;
+		}
 
-  @media screen and (max-width: 1200px) {
-    #textInput {
-      min-width: 24vw;
-      max-width: 40vw;
-    }
-  }
-  @media screen and (max-width: 900px) {
-    #textInput {
-      min-width: 30vw;
-      max-width: 55vw;
-    }
-  }
-  @media screen and (max-width: 650px) {
-    .main-content {
-      width: 100%;
-    }
-    #sidebar {
-      width: 85vw;
-      min-width: 0;
-    }
-    #textInput {
-      min-width: 50vw;
-      max-width: 80vw;
-      font-size: 1.1rem;
-    }
-    .input-bottom-bar.sidebar-push {
-      left: 85vw;
-      width: calc(100vw - 85vw);
-      max-width: calc(100vw - 85vw);
-    }
-  }
-  @media screen and (max-width: 450px) {
-    #textInput {
-      min-width: 70vw;
-      max-width: 97vw;
-      font-size: 1.15rem;
-    }
-  }
-  .input-bottom-bar {
-    position: fixed;
-    left: 0;
-    bottom: 47vh;
-    background: #212121;
-    padding: 0.5rem 0.75rem 0.75rem 0.75rem;
-    box-sizing: border-box;
-    z-index: 2;
-    display: flex;
-    gap: 0.5rem;
-    align-items: flex-end;
-    width: 100vw;
-    max-width: 100vw;
-    justify-content: center;
-    transition: left 0.3s, width 0.3s;
-  }
-  .input-bar-centered {
-    bottom: 2vh;
-  }
-  .input-bottom-bar.sidebar-push {
-    left: 20rem;
-    width: calc(100vw - 20rem);
-    max-width: calc(100vw - 20rem);
-    justify-content: flex-start;
-  }
-  @media (pointer:coarse) and (max-width: 650px) {
-    .main-content {
-      padding-bottom: 5.5rem;
-    }
-    .input-bottom-bar {
-      padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0));
-    }
-  }
+		.main-content {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			flex-grow: 1;
+			height: 100%;
+		}
+		.chat-container:not(:empty) + .flex.gap-2.items-center {
+			justify-content: flex-start;
+			margin-top: auto;
+		}
+		.chat-container:empty ~ #status {
+			display: none !important;
+		}
+		.center-vertical {
+			margin-top: auto;
+			margin-bottom: auto;
+		}
+		#textInput {
+			width: 20vw;
+			max-width: 30vw;
+			background-color: #303030;
+			color: white;
+			padding: 20px;
+			border: 1px solid #424242;
+			border-radius: 50px;
+			box-sizing: border-box;
+			outline: none;
+			white-space: pre-wrap;
+			word-break: break-word;
+			overflow-wrap: break-word;
+			display: block;
+			min-height: 2.5rem;
+			max-height: 40vh;
+			overflow-y: auto;
+		}
 
-  .tooltip {
-    position: absolute;
-    background: #111214;
-    color: white;
-    padding: 6px 10px;
-    font-size: 14px;
-    border-radius: 5px;
-    white-space: nowrap;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-  #channelList li:last-child {
-  margin-bottom: 20em; 
-  }
-  #channelList li:first-child {
-    margin-bottom: 0.75rem; 
-  }
+		@media screen and (max-width: 1200px) {
+			#textInput {
+				min-width: 24vw;
+				max-width: 40vw;
+			}
+		}
+		@media screen and (max-width: 900px) {
+			#textInput {
+				min-width: 30vw;
+				max-width: 55vw;
+			}
+		}
+		@media screen and (max-width: 650px) {
+			.main-content {
+				width: 100%;
+			}
+			#sidebar {
+				width: 85vw;
+				min-width: 0;
+			}
+			#textInput {
+				min-width: 50vw;
+				max-width: 80vw;
+				font-size: 1.1rem;
+			}
+			.input-bottom-bar.sidebar-push {
+				left: 85vw;
+				width: calc(100vw - 85vw);
+				max-width: calc(100vw - 85vw);
+			}
+		}
+		@media screen and (max-width: 450px) {
+			#textInput {
+				min-width: 70vw;
+				max-width: 97vw;
+				font-size: 1.15rem;
+			}
+		}
+		.input-bottom-bar {
+			position: fixed;
+			left: 0;
+			bottom: 47vh;
+			background: #212121;
+			padding: 0.5rem 0.75rem 0.75rem 0.75rem;
+			box-sizing: border-box;
+			z-index: 2;
+			display: flex;
+			gap: 0.5rem;
+			align-items: flex-end;
+			width: 100vw;
+			max-width: 100vw;
+			justify-content: center;
+			transition:
+				left 0.3s,
+				width 0.3s;
+		}
+		.input-bar-centered {
+			bottom: 2vh;
+		}
+		.input-bottom-bar.sidebar-push {
+			left: 20rem;
+			width: calc(100vw - 20rem);
+			max-width: calc(100vw - 20rem);
+			justify-content: flex-start;
+		}
+		@media (pointer: coarse) and (max-width: 650px) {
+			.main-content {
+				padding-bottom: 5.5rem;
+			}
+			.input-bottom-bar {
+				padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0));
+			}
+		}
 
-</style>
-<body class="text-white font-sans h-screen flex flex-col items-center p-4 relative" style="overflow: hidden">
-  <div id="__main-wrap">
-    <button id="hamburgerButton" class="absolute top-2 left-0 p-3 rounded-md text-white focus:outline-none" >
-      <i class="fas fa-bars text-xl"></i>
-    </button>
-    <div id="sidebar" class="">
-      <div class="flex flex-col items-center mb-4">
-        <h1 class="text-2xl font-bold mb-4"><i class="fas fa-robot mr-2"></i>Efe GPT</h1>
-        <button id="closeSidebarButton" class="absolute left-4 top-2 text-white text-lg focus:outline-none">
-          <i class="fas fa-times"></i>
-        </button>
-        <div class="text-white text-xl font-bold text-center">History</div>
-      </div>
-      <div id="searchInputContainer" class="flex items-center gap-2 text-gray-400">
-        <i class="fas fa-search"></i>
-        <input id="searchInput" placeholder="Search channels" class="bg-transparent focus:outline-none text-white w-full" />
-      </div>
-      <ul id="channelList" class="flex flex-col gap-2 overflow-y-auto"></ul>
+		.tooltip {
+			position: absolute;
+			background: #111214;
+			color: white;
+			padding: 6px 10px;
+			font-size: 14px;
+			border-radius: 5px;
+			white-space: nowrap;
+			visibility: hidden;
+			opacity: 0;
+			transition: opacity 0.2s ease-in-out;
+		}
+		#channelList li:last-child {
+			margin-bottom: 20em;
+		}
+		#channelList li:first-child {
+			margin-bottom: 0.75rem;
+		}
+	</style>
+	<body
+		class="text-white font-sans h-screen flex flex-col items-center p-4 relative"
+		style="overflow: hidden"
+	>
+		<div id="__main-wrap">
+			<button
+				id="hamburgerButton"
+				class="absolute top-2 left-0 p-3 rounded-md text-white focus:outline-none"
+			>
+				<i class="fas fa-bars text-xl"></i>
+			</button>
+			<div id="sidebar" class="">
+				<div class="flex flex-col items-center mb-4">
+					<h1 class="text-2xl font-bold mb-4">
+						<i class="fas fa-robot mr-2"></i>Efe GPT
+					</h1>
+					<button
+						id="closeSidebarButton"
+						class="absolute left-4 top-2 text-white text-lg focus:outline-none"
+					>
+						<i class="fas fa-times"></i>
+					</button>
+					<div class="text-white text-xl font-bold text-center">
+						History
+					</div>
+				</div>
+				<div
+					id="searchInputContainer"
+					class="flex items-center gap-2 text-gray-400"
+				>
+					<i class="fas fa-search"></i>
+					<input
+						id="searchInput"
+						placeholder="Search channels"
+						class="bg-transparent focus:outline-none text-white w-full"
+					/>
+				</div>
+				<ul
+					id="channelList"
+					class="flex flex-col gap-2 overflow-y-auto"
+				></ul>
 
-      <button id="deleteButton" class="absolute bottom-4 left-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
-        <i class="fas fa-trash-alt"></i> Delete All Chats
-      </button>
-    </div>
+				<button
+					id="deleteButton"
+					class="absolute bottom-4 left-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+				>
+					<i class="fas fa-trash-alt"></i> Delete All Chats
+				</button>
+			</div>
 
-    <div class="main-content flex flex-col gap-4 w-full max-w-3xl">
-      <div class="chat-container rounded-lg p-6 overflow-y-auto mb-10" id="chatContainer"></div>
-      <h1 id="empty-chat-text" class="text-3xl font-bold">What can i help with?</h1>
-      <div class="inline-block absolute top-4 left-1/2 transform -translate-x-1/2">
-        <button id="modelsButton" class="text-white px-4 py-2 rounded hover:bg-blue-600">
-          Models
-        </button>
-        <div class="absolute hidden bg-gray-900 hover:bg-gray-700 text-white hover:text-gray-200 font-bold rounded shadow-md w-48 top-full mt-2 left-1/2 transform -translate-x-1/2">
-          <ul id="models-dropdown" class="py-2">
+			<div class="main-content flex flex-col gap-4 w-full max-w-3xl">
+				<div
+					class="chat-container rounded-lg p-6 overflow-y-auto mb-10"
+					id="chatContainer"
+				></div>
+				<h1 id="empty-chat-text" class="text-3xl font-bold">
+					What can i help with?
+				</h1>
+				<div
+					class="inline-block absolute top-4 left-1/2 transform -translate-x-1/2"
+				>
+					<button
+						id="modelsButton"
+						class="text-white px-4 py-2 rounded hover:bg-blue-600"
+					>
+						Models
+					</button>
+					<div
+						class="absolute hidden bg-gray-900 hover:bg-gray-700 text-white hover:text-gray-200 font-bold rounded shadow-md w-48 top-full mt-2 left-1/2 transform -translate-x-1/2"
+					>
+						<ul id="models-dropdown" class="py-2"></ul>
+					</div>
+				</div>
 
-          </ul>
-        </div>
-      </div>
-      
-      
-      <div style="height:4.5rem"></div>
-      <div id="recordingIndicator" class="text-red-500 text-lg hidden flex items-center gap-2">
-        <i class="fas fa-circle-notch fa-spin"></i>
-        <span>Recording</span>
-      </div>
-    </div>
-    <div class="input-bottom-bar" id="inputBottomBar">
-      <div id="status" style = "margin-bottom: 50px;" class="text-sm text-gray-400 mt-2 flex items-center gap-2">
-        <i class="fas fa-info-circle"></i>
-        <span></span>
-      </div>
-      <div
-        id="textInput"
-        contenteditable="true"
-        placeholder="Type your message here"
-        class="flex-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Type your message here"
-        role="textbox"
-      ></div>
-        <button id="recordButton" class="border border-gray-500 border-solid text-white w-12 h-12 rounded-full flex items-center justify-center">
-  
-        <i class="fas fa-microphone text-lg"></i>
-      </button>
-      <button id="sendButton" class="bg-white text-black w-12 h-12 rounded-full flex items-center justify-center">
-        <i class="fas fa-paper-plane text-black text-lg"></i>
-      </button>
-    </div>
-  </div>
-  <script>
-    function updateContentEditablePlaceholder() {
-      var input = document.getElementById('textInput');
-      if (!input.textContent.trim()) {
-        input.setAttribute('data-placeholder', input.getAttribute('placeholder'));
-        input.classList.add('empty');
-      } else {
-        input.removeAttribute('data-placeholder');
-        input.classList.remove('empty');
-      }
-    }
-    function setSidebarState(open) {
-      var sidebar = document.getElementById('sidebar');
-      var inputBar = document.getElementById('inputBottomBar');
-      if (open) {
-        sidebar.classList.add('open');
-        inputBar.classList.add('sidebar-push');
-      } else {
-        sidebar.classList.remove('open');
-        inputBar.classList.remove('sidebar-push');
-      }
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-      var input = document.getElementById('textInput');
-      if (input) {
-        input.addEventListener('input', updateContentEditablePlaceholder);
-        updateContentEditablePlaceholder();
-      }
-      var hamburgerButton = document.getElementById('hamburgerButton');
-      var closeSidebarButton = document.getElementById('closeSidebarButton');
-      hamburgerButton.addEventListener('click', function (e) {
-        setSidebarState(true);
-      });
-      closeSidebarButton.addEventListener('click', function (e) {
-        setSidebarState(false);
-      });
-      document.addEventListener('click', function (e) {
-        var sidebar = document.getElementById('sidebar');
-        if (
-          sidebar.classList.contains('open') &&
-          !sidebar.contains(e.target) &&
-          !document.getElementById('hamburgerButton').contains(e.target)
-        ) {
-          setSidebarState(false);
-        }
-      });
-      if ('visualViewport' in window) {
-  window.visualViewport.addEventListener('resize', function () {
-    var inputBar = document.getElementById('inputBottomBar');
-    inputBar.style.height = '50vh';
-  });
-}
-
-    });
-  </script>
-  <script src="/static/main.js"></script>
-</body>
+				<div style="height: 4.5rem"></div>
+				<div
+					id="recordingIndicator"
+					class="text-red-500 text-lg hidden flex items-center gap-2"
+				>
+					<i class="fas fa-circle-notch fa-spin"></i>
+					<span>Recording</span>
+				</div>
+			</div>
+			<div class="input-bottom-bar" id="inputBottomBar">
+				<div
+					id="status"
+					style="margin-bottom: 50px"
+					class="text-sm text-gray-400 mt-2 flex items-center gap-2"
+				>
+					<i class="fas fa-info-circle"></i>
+					<span></span>
+				</div>
+				<div
+					id="textInput"
+					contenteditable="true"
+					placeholder="Type your message here"
+					class="flex-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+					aria-label="Type your message here"
+					role="textbox"
+				></div>
+				<button
+					id="recordButton"
+					class="border border-gray-500 border-solid text-white w-12 h-12 rounded-full flex items-center justify-center"
+				>
+					<i class="fas fa-microphone text-lg"></i>
+				</button>
+				<button
+					id="sendButton"
+					class="bg-white text-black w-12 h-12 rounded-full flex items-center justify-center"
+				>
+					<i class="fas fa-paper-plane text-black text-lg"></i>
+				</button>
+			</div>
+		</div>
+		<script>
+			function updateContentEditablePlaceholder() {
+				var input = document.getElementById('textInput');
+				if (!input.textContent.trim()) {
+					input.setAttribute(
+						'data-placeholder',
+						input.getAttribute('placeholder')
+					);
+					input.classList.add('empty');
+				} else {
+					input.removeAttribute('data-placeholder');
+					input.classList.remove('empty');
+				}
+			}
+			function setSidebarState(open) {
+				var sidebar = document.getElementById('sidebar');
+				var inputBar = document.getElementById('inputBottomBar');
+				if (open) {
+					sidebar.classList.add('open');
+					inputBar.classList.add('sidebar-push');
+				} else {
+					sidebar.classList.remove('open');
+					inputBar.classList.remove('sidebar-push');
+				}
+			}
+			document.addEventListener('DOMContentLoaded', function () {
+				var input = document.getElementById('textInput');
+				if (input) {
+					input.addEventListener(
+						'input',
+						updateContentEditablePlaceholder
+					);
+					updateContentEditablePlaceholder();
+				}
+				var hamburgerButton =
+					document.getElementById('hamburgerButton');
+				var closeSidebarButton =
+					document.getElementById('closeSidebarButton');
+				hamburgerButton.addEventListener('click', function (e) {
+					setSidebarState(true);
+				});
+				closeSidebarButton.addEventListener('click', function (e) {
+					setSidebarState(false);
+				});
+				document.addEventListener('click', function (e) {
+					var sidebar = document.getElementById('sidebar');
+					if (
+						sidebar.classList.contains('open') &&
+						!sidebar.contains(e.target) &&
+						!document
+							.getElementById('hamburgerButton')
+							.contains(e.target)
+					) {
+						setSidebarState(false);
+					}
+				});
+				if ('visualViewport' in window) {
+					window.visualViewport.addEventListener(
+						'resize',
+						function () {
+							var inputBar =
+								document.getElementById('inputBottomBar');
+							inputBar.style.height = '50vh';
+						}
+					);
+				}
+			});
+		</script>
+		<script src="/static/main.js"></script>
+	</body>
 </html>
