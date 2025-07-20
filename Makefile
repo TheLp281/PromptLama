@@ -3,18 +3,19 @@
 run:
 	@echo Starting the VoiceAI app...
 	@if [ -f venv/bin/python ]; then \
-		venv/bin/python -m uvicorn main:app --reload; \
+		venv/bin/python -m uvicorn main:app --reload --host 0.0.0.0; \
 	else \
-		venv\Scripts\python.exe -m uvicorn main:app --reload; \
+		venv\Scripts\python.exe -m uvicorn main:app --reload --host 0.0.0.0; \
 	fi
 
 run-production:
 	@echo Starting the VoiceAI app...
 	@if [ -f venv/bin/python ]; then \
-		venv/bin/python -m uvicorn main:app; \
+		venv/bin/python -m uvicorn main:app --host 0.0.0.0; \
 	else \
-		venv\Scripts\python.exe -m uvicorn main:app; \
+		venv\Scripts\python.exe -m uvicorn main:app --host 0.0.0.0; \
 	fi
+
 
 lint:
 	@echo Running Ruff linter...
@@ -31,8 +32,8 @@ format:
 	else \
 		venv\Scripts\python.exe -m ruff format .; \
 	fi
-	npx prettier static/index.html
-	npx prettier static/main.js
+	npx prettier static/index.html --write
+	npx prettier static/main.js --write
 
 
 install:
