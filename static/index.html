@@ -159,6 +159,7 @@
 			overflow-y: auto;
 			min-height: 0;
 			overflow-x: hidden;
+			margin-top: 30px;
 		}
 		.chat-container.empty {
 			flex-grow: 0;
@@ -166,7 +167,13 @@
 			height: 0;
 			overflow: hidden;
 		}
-		.modelsButton {
+		pre {
+			white-space: pre-wrap;
+			word-break: break-word;
+			overflow-wrap: break-word;
+		}
+
+		#modelsButton {
 			white-space: nowrap;
 		}
 
@@ -195,6 +202,10 @@
 		}
 		.chat-container:empty ~ #status {
 			display: none !important;
+		}
+		#status {
+			bottom: 120px;
+			position: absolute;
 		}
 		.center-vertical {
 			margin-top: auto;
@@ -398,7 +409,6 @@
 			<div class="input-bottom-bar" id="inputBottomBar">
 				<div
 					id="status"
-					style="margin-bottom: 50px"
 					class="text-sm text-gray-400 mt-2 flex items-center gap-2"
 				>
 					<i class="fas fa-info-circle"></i>
