@@ -191,6 +191,8 @@ async function processChatRequest(formData) {
 		if (currentChannelId) {
 			formData.append('channel_id', currentChannelId);
 		}
+		streamingBubble = null;
+		streamingText = "";
 		const usedChannel = currentChannelId;
 		const selectedModel = getSelectedModel();
 		if (selectedModel) {
@@ -712,10 +714,9 @@ function appendMessage(
 		}
 
 		streamingText += text;
-		const codeEl = streamingBubble
-			.querySelector('pre')
-			.querySelector('code');
-		if (codeEl) codeEl.textContent = streamingText;
+		const codeEl = streamingBubble?.querySelector('pre')?.querySelector('code');
+		if (codeEl) codeEl.textContent = streamingText ?? '';
+
 
 		chatContainer.scrollTop = chatContainer.scrollHeight;
 		return;
