@@ -16,6 +16,14 @@ from fastapi import Cookie, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("server.log"), logging.StreamHandler(sys.stdout)],
+)
+
+
 from ai import (
     extract_user_input_async,
     response_stream_generator,
@@ -24,12 +32,6 @@ from chat import chat_storage_manager
 from ollama import does_model_exist, ollama_models
 
 os.makedirs("static/audio", exist_ok=True)
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.FileHandler("server.log"), logging.StreamHandler(sys.stdout)],
-)
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
